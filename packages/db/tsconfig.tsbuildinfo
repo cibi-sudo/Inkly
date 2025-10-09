@@ -1,0 +1,1 @@
+{"root":["./src/client.ts","./src/index.ts","./src/dal/boardDAL.ts","./src/dal/collaboratorDAL.ts","./src/dal/elementDAL.ts","./src/dal/userDAL.ts"],"version":"5.9.3"}

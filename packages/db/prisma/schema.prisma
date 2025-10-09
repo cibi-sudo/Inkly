@@ -7,15 +7,78 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// ========================
+// Auth Models (BetterAuth)
+// ========================
+
 model User {
-  id            String         @id @default(cuid())
-  email         String         @unique
+  id            String   @id @default(cuid())
   name          String?
+  email         String   @unique
+  emailVerified Boolean  @default(false)
+  image         String?
   password      String?
-  createdAt     DateTime       @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
+
+  // Auth relations
+  sessions Session[]
+  accounts Account[]
+
+  // App relations
   boards        Board[]
   collaborators Collaborator[]
+
+  @@map("user")
 }
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@map("verification")
+}
+
+// ========================
+// App Models (Your Project)
+// ========================
 
 model Board {
   id            String         @id @default(cuid())
@@ -32,8 +95,8 @@ model Element {
   id        String   @id @default(cuid())
   boardId   String
   board     Board    @relation(fields: [boardId], references: [id])
-  type      String // rectangle, line, text, etc.
-  data      Json // x,y,coords,color,etc.
+  type      String
+  data      Json
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -42,7 +105,7 @@ model Collaborator {
   id        String   @id @default(cuid())
   boardId   String
   userId    String
-  role      String // viewer/editor
+  role      String
   board     Board    @relation(fields: [boardId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())

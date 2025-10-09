@@ -1,0 +1,1 @@
+{"root":["./src/index.ts","./src/board/boardSchema.ts","./src/collaborator/collaboratorSchema.ts","./src/element/elementSchema.ts","./src/user/userSchema.ts","./src/utils/error.ts"],"version":"5.9.3"}

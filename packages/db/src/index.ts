@@ -1,3 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-
-export const prismaClient = new PrismaClient();
+export * from "./client.js";
+export * from "./dal/userDAL.js";
+export * from "./dal/userDAL.js";
+export * from "./dal/elementDAL.js";
